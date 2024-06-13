@@ -95,9 +95,9 @@ const ModalJabatan: React.FC<ModalJabatanProps> = ({
         } else {
             setFormJabatan({
                 nama_jabatan: '',
-                id_department: department.length > 0 ? department[0].id : 0,
+                id_department: department,
             });
-            setSelectedDepartment(department.length > 0 ? department[0].id : 0);
+            setSelectedDepartment(department);
         }
     }, [jabatanData, jabatan, department]);
 
@@ -105,10 +105,19 @@ const ModalJabatan: React.FC<ModalJabatanProps> = ({
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
         const { name, value } = e.target;
-        setFormJabatan((prevForm) => ({
-            ...prevForm,
-            [name]: value,
-        }));
+
+        if (name === 'id_department') {
+            setSelectedDepartment(Number(value));
+            setFormJabatan((prevForm) => ({
+                ...prevForm,
+                id_department: Number(value),
+            }));
+        } else {
+            setFormJabatan((prevForm) => ({
+                ...prevForm,
+                [name]: value,
+            }));
+        }
     };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -162,11 +171,7 @@ const ModalJabatan: React.FC<ModalJabatanProps> = ({
                                 id="id_department"
                                 name="id_department"
                                 value={selectedDepartment}
-                                onChange={(e) =>
-                                    setSelectedDepartment(
-                                        Number(e.target.value)
-                                    )
-                                }
+                                onChange={handleChange}
                                 required
                             >
                                 <option value="">Pilih Department</option>
